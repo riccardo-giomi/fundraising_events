@@ -1,0 +1,8 @@
+AllCops:
+  NewCops: enable
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'test/**/*'
+    - 'domain/fundraising_events/entities/fundraising_event.rb'
+    - 'domain/fundraising_events/use_cases/create_fundraising_event.rb'
