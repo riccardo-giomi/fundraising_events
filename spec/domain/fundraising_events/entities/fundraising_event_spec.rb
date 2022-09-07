@@ -23,7 +23,7 @@ RSpec.describe FundraisingEvent do
     end
 
     it 'returns data ready for I/O save operations' do
-      valid_data = { name: 'Skulls for the skull trhone' }
+      valid_data = { name: 'Skulls for the skull throne' }
 
       entity = described_class.new(**valid_data)
 

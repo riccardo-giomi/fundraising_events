@@ -90,5 +90,13 @@ RSpec.describe CreateFundraisingEvent do
         expect(response).to eq(expected_response)
       end
     end
+
+    context 'when not successful' do
+      let(:invalid_request) { CreateFundraisingEvent::Request.new(name: '') }
+
+      it 'raises an error' do
+        expect { use_case.call(invalid_request) }.to raise_error(ValidationError, /name.*blank/)
+      end
+    end
   end
 end

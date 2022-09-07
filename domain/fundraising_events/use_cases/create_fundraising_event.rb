@@ -24,6 +24,8 @@ class CreateFundraisingEvent
     gateway_response = @gateway.create_fundraising_event(**entity_response)
 
     CreateFundraisingEvent::Response.new(**gateway_response)
+  rescue ValidationError => e
+    raise e
   end
 
   private
