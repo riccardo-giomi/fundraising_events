@@ -48,7 +48,7 @@ RSpec.describe CreateFundraisingEvent do
     context 'when successful' do # rubocop:disable RSpec/MultipleMemoizedHelpers
       let(:expected_entity_response)   { request_data }
       let(:expected_gateway_response)  { request_data }
-      let(:expected_response_data) { request_data }
+      let(:expected_response_data)     { request_data }
 
       let(:entity)            { instance_double(FundraisingEvent) }
       let(:expected_response) { CreateFundraisingEvent::Response.new(**expected_response_data) }

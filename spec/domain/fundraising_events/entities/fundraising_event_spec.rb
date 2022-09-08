@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # fundraising_event_spec.rb
 
 require_relative '../../../../domain/fundraising_events/entities/fundraising_event'
@@ -16,7 +18,7 @@ RSpec.describe FundraisingEvent do
       expect { entity.create }.to raise_error(ValidationError, /blank/)
     end
 
-    it "is not fooled if the name contains spaces" do
+    it 'is not fooled if the name contains spaces' do
       entity = described_class.new(name: '   ')
 
       expect { entity.create }.to raise_error(ValidationError, /blank/)

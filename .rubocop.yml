@@ -1,10 +1,25 @@
+inherit_from: .rubocop_todo.yml
+
 require: rubocop-rspec
 
 AllCops:
   NewCops: enable
+
+Layout/ExtraSpacing:
+  AllowForAlignment: true
+
+Lint/UnusedMethodArgument:
+  Exclude:
+    - 'domain/fundraising_events/data_gateways/*'
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/domain/_features/*'
+
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/domain/_features/*'
+
 Style/Documentation:
   Exclude:
-    - "spec/**/*"
-    - "test/**/*"
-    - "domain/fundraising_events/entities/fundraising_event.rb"
-    - "domain/fundraising_events/use_cases/create_fundraising_event.rb"
+    - 'spec/**'
