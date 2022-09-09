@@ -3,7 +3,7 @@
 require_relative '../../../../domain/fundraising_events/entities/fundraising_event'
 require_relative '../../../../domain/fundraising_events/use_cases/create_fundraising_event'
 
-class TestGateway < DataGateways::FundraisingEvent
+class ImplementedGateway < DataGateways::FundraisingEvent
   class << self
     def create_fundraising_event(name:)
       { name: }
@@ -26,7 +26,7 @@ RSpec.describe CreateFundraisingEvent do
   end
 
   describe '#call' do
-    subject(:use_case) { described_class.new(gateway: TestGateway) }
+    subject(:use_case) { described_class.new(gateway: ImplementedGateway) }
 
     let(:request)      { CreateFundraisingEvent::Request.new(**request_data) }
     let(:request_data) { { name: 'Blood for the blood god' } }
@@ -60,7 +60,7 @@ RSpec.describe CreateFundraisingEvent do
         allow(entity).to receive(:create)
           .and_return(expected_entity_response)
 
-        allow(TestGateway).to receive(:create_fundraising_event)
+        allow(ImplementedGateway).to receive(:create_fundraising_event)
           .and_return(expected_gateway_response)
       end
 
@@ -80,7 +80,7 @@ RSpec.describe CreateFundraisingEvent do
       it 'uses the data gateway to access data I/O' do
         use_case.call(request)
 
-        expect(TestGateway).to have_received(:create_fundraising_event)
+        expect(ImplementedGateway).to have_received(:create_fundraising_event)
           .with(request_data)
       end
 
