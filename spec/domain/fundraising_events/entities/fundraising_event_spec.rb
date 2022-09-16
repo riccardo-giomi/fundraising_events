@@ -12,6 +12,12 @@ RSpec.describe FundraisingEvent do
   end
 
   describe '#create' do
+    it 'checks that an id is not present' do
+      entity = described_class.new(id: 1, name: 'Blood for the blood god')
+
+      expect { entity.create }.to raise_error(ValidationError, /id/)
+    end
+
     it "checks that there's a name" do
       entity = described_class.new(name: nil)
 
@@ -24,12 +30,22 @@ RSpec.describe FundraisingEvent do
       expect { entity.create }.to raise_error(ValidationError, /blank/)
     end
 
-    it 'returns data ready for I/O save operations' do
-      valid_data = { name: 'Skulls for the skull throne' }
+    describe 'return data' do
+      it 'is ready for I/O save operations' do
+        valid_data = { name: 'Skulls for the skull throne' }
 
-      entity = described_class.new(**valid_data)
+        data = described_class.new(**valid_data).create
 
-      expect(entity.create).to eq valid_data
+        expect(data).to eq valid_data
+      end
+
+      it 'still contains no id' do
+        valid_data = { name: 'Skulls for the skull throne' }
+
+        data = described_class.new(**valid_data).create
+
+        expect(data[:id]).to be_empty.or be_nil
+      end
     end
   end
 end

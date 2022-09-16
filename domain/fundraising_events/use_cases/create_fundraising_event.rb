@@ -9,7 +9,7 @@ class InvalidDataGatewayError < StandardError; end
 
 class CreateFundraisingEvent
   Request = Struct.new(:name, keyword_init: true)
-  Response = Struct.new(:name, keyword_init: true)
+  Response = Struct.new(:id, :name, keyword_init: true)
 
   def initialize(gateway: nil)
     @gateway = gateway

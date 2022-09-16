@@ -3,19 +3,38 @@
 require_relative '../../../domain/fundraising_events/data_gateways/fundraising_event'
 
 module Memory
+  # rubocop:disable Style/ClassVars
   class FundraisingEvent < DataGateways::FundraisingEvent
-    @@values = [] # rubocop:disable Style/ClassVars
+    @@next_id = 1
+    @@values = []
 
     class << self
       def create_fundraising_event(name:)
-        fundraising_event = { name: }
+        fundraising_event = {
+          id: new_id,
+          name:
+        }
+
         @@values << fundraising_event
         fundraising_event
       end
 
-      # cheating a little for testing, this is not (yet?) part of the "public interface"
-      def _load_last_fundraising_event
-        @@values.last
+      private
+
+      def new_id
+        id = @@next_id
+        @@next_id += 1
+        id
+      end
+
+      # Test support methods
+      def _count_fundraising_events
+        @@values.count
+      end
+
+      def _reset
+        @@values = []
+        @@next_id = 1
       end
     end
   end

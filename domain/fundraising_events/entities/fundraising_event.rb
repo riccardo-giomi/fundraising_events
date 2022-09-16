@@ -3,7 +3,8 @@
 class ValidationError < StandardError; end
 
 class FundraisingEvent
-  def initialize(name:)
+  def initialize(id: nil, name:)
+    @id   = id
     @name = name
   end
 
@@ -15,6 +16,7 @@ class FundraisingEvent
   private
 
   def validate_for_creation
+    raise(ValidationError, 'id: this entity already has an id') if @id
     raise(ValidationError, 'name: blank') if @name.to_s.gsub(/\s/, '').empty?
   end
 end

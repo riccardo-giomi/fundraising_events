@@ -6,7 +6,7 @@ require_relative '../../../../domain/fundraising_events/use_cases/create_fundrai
 class ImplementedGateway < DataGateways::FundraisingEvent
   class << self
     def create_fundraising_event(name:)
-      { name: }
+      { id: 666, name: }
     end
   end
 end
@@ -28,47 +28,41 @@ RSpec.describe CreateFundraisingEvent do
   describe '#call' do
     subject(:use_case) { described_class.new(gateway: ImplementedGateway) }
 
-    let(:request)      { CreateFundraisingEvent::Request.new(**request_data) }
-    let(:request_data) { { name: 'Blood for the blood god' } }
+    let(:request) do
+      CreateFundraisingEvent::Request.new({ name: 'Blood for the blood god' })
+    end
 
     it 'requires a request argument' do
       expect { use_case.call }.to raise_error(ArgumentError)
     end
 
-    it 'requires an argument (request)' do
+    it 'requires an argument of a specific type' do
       hash_argument = { name: 'Pastry for the plebs' }
 
       expect { use_case.call(hash_argument) }.to raise_error(InvalidRequestError)
     end
 
-    it 'requires its argument to be of the correct type' do
+    it 'requires its argument to be a Request object' do
       expect { use_case.call(request) }.not_to raise_error
     end
 
-    context 'when successful' do # rubocop:disable RSpec/MultipleMemoizedHelpers
-      let(:expected_entity_response)   { request_data }
-      let(:expected_gateway_response)  { request_data }
-      let(:expected_response_data)     { request_data }
-
-      let(:entity)            { instance_double(FundraisingEvent) }
-      let(:expected_response) { CreateFundraisingEvent::Response.new(**expected_response_data) }
+    context 'when successful' do
+      entity = nil
 
       before do
-        allow(FundraisingEvent).to receive(:new)
-          .and_return(entity)
-
-        allow(entity).to receive(:create)
-          .and_return(expected_entity_response)
-
-        allow(ImplementedGateway).to receive(:create_fundraising_event)
-          .and_return(expected_gateway_response)
+        allow(FundraisingEvent).to receive(:new).and_wrap_original do |method, *args, **kwd|
+          entity = method.call(*args, **kwd)
+          allow(entity).to receive(:create).and_call_original
+          entity
+        end
+        allow(ImplementedGateway).to receive(:create_fundraising_event).and_call_original
       end
 
       it 'creates entities as required' do
         use_case.call(request)
 
         expect(FundraisingEvent).to have_received(:new)
-          .with(request_data)
+          .with({ name: 'Blood for the blood god' })
       end
 
       it 'uses the required entities to prepare a response' do
@@ -81,13 +75,13 @@ RSpec.describe CreateFundraisingEvent do
         use_case.call(request)
 
         expect(ImplementedGateway).to have_received(:create_fundraising_event)
-          .with(request_data)
+          .with({ name: 'Blood for the blood god' })
       end
 
       it 'returns a response with expanded fundraising event data' do
         response = use_case.call(request)
 
-        expect(response).to eq(expected_response)
+        expect(response.to_h).to eq({ id: 666, name: 'Blood for the blood god' })
       end
     end
 
