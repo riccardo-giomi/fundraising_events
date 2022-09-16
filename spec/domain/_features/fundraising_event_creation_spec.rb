@@ -20,7 +20,7 @@ RSpec.describe 'Fundraising event creation' do
       expect(output[:name]).to eq('fundraising name')
     end
 
-    it 'actually "saves" data somewhere' do
+    it 'actually persists data somewhere' do
       expect do
         CreateFundraisingEvent.new(gateway:).call(request)
       end.to change { gateway.send(:_count_fundraising_events) }.from(0).to(1)

@@ -1,6 +1,10 @@
+require: rubocop-rspec
+
 inherit_from: .rubocop_todo.yml
 
-require: rubocop-rspec
+inherit_mode:
+  merge:
+    - Exclude
 
 AllCops:
   NewCops: enable
@@ -10,16 +14,33 @@ Layout/ExtraSpacing:
 
 Lint/UnusedMethodArgument:
   Exclude:
-    - 'domain/fundraising_events/data_gateways/*'
+    - "domain/fundraising_events/data_gateways/*"
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - if
+    - unless
+    - for
 
 RSpec/DescribeClass:
   Exclude:
-    - 'spec/domain/_features/*'
+    - "spec/domain/_features/**/*"
+
+RSpec/ExampleLength:
+  Exclude:
+    - "spec/domain/_features/**/*"
 
 RSpec/MultipleExpectations:
   Exclude:
-    - 'spec/domain/_features/*'
+    - "spec/domain/_features/**/*"
 
 Style/Documentation:
   Exclude:
-    - 'spec/**'
+    - "spec/**"
+
+Style/KeywordParametersOrder:
+  Exclude:
+    - "domain/fundraising_events/entities/*"

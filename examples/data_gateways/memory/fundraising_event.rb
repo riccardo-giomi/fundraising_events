@@ -3,18 +3,13 @@
 require_relative '../../../domain/fundraising_events/data_gateways/fundraising_event'
 
 module Memory
-  # rubocop:disable Style/ClassVars
   class FundraisingEvent < DataGateways::FundraisingEvent
     @@next_id = 1
     @@values = []
 
     class << self
       def create_fundraising_event(name:)
-        fundraising_event = {
-          id: new_id,
-          name:
-        }
-
+        fundraising_event = { id: new_id, name: }
         @@values << fundraising_event
         fundraising_event
       end
