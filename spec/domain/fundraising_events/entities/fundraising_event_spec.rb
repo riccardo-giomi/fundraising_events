@@ -46,6 +46,14 @@ RSpec.describe FundraisingEvent do
 
         expect(data[:id]).to be_empty.or be_nil
       end
+
+      it 'is sanitized as required' do
+        valid_data = { name: " spaaaaaace(s) \t " }
+
+        data = described_class.new(**valid_data).create
+
+        expect(data[:name]).to eq('spaaaaaace(s)')
+      end
     end
   end
 end
