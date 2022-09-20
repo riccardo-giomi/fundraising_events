@@ -3,7 +3,7 @@
 require_relative '../../../domain/fundraising_events/data_gateways/fundraising_event'
 
 module Memory
-  class FundraisingEvent < DataGateways::FundraisingEvent
+  class FundraisingEvent < Domain::DataGateways::FundraisingEvent
     @@next_id = 1
     @@values = []
 

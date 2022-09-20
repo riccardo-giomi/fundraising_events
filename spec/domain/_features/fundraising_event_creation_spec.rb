@@ -6,14 +6,14 @@ require_relative '../../../domain/fundraising_events/use_cases/create_fundraisin
 RSpec.describe 'Fundraising event creation' do
   context 'when successful' do
     let(:gateway) { Memory::FundraisingEvent }
-    let(:request) { CreateFundraisingEvent::Request.new(name: 'fundraising name') }
+    let(:request) { Domain::CreateFundraisingEvent::Request.new(name: 'fundraising name') }
 
     before do
       gateway.send(:_reset)
     end
 
     it 'creates a new fundraising event' do
-      response = CreateFundraisingEvent.new(gateway:).call(request)
+      response = Domain::CreateFundraisingEvent.new(gateway:).call(request)
       output = response.to_h
 
       expect(output[:id]).to be_a(Integer).and(be > 0)
@@ -22,7 +22,7 @@ RSpec.describe 'Fundraising event creation' do
 
     it 'actually persists data somewhere' do
       expect do
-        CreateFundraisingEvent.new(gateway:).call(request)
+        Domain::CreateFundraisingEvent.new(gateway:).call(request)
       end.to change { gateway.send(:_count_fundraising_events) }.from(0).to(1)
     end
   end

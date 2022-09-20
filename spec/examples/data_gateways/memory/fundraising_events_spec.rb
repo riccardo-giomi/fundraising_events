@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require_relative '../../../../../examples/data_gateways/memory/fundraising_event'
+require_relative '../../../../examples/data_gateways/memory/fundraising_event'
 
-# TODO: refactor and create an example group for data gateways
 RSpec.describe Memory::FundraisingEvent do
   before do
     described_class.send(:_reset)
