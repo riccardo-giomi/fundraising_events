@@ -4,11 +4,11 @@ require_relative '../domain'
 require_relative '../examples/data_gateways/memory/fundraising_event'
 
 RSpec.describe Domain::FundraisingEvents do
-  before do
-    described_class.data_gateway = nil
-  end
-
   describe 'configuration' do
+    before do
+      described_class.data_gateway = nil
+    end
+
     it 'requires a data gateway' do
       expect { described_class.data_gateway }.to raise_error(Domain::MissingDataGatewayError)
     end
@@ -28,35 +28,34 @@ RSpec.describe Domain::FundraisingEvents do
     end
   end
 
+  describe 'exposes classes that need to be known outside the module' do
+    describe 'Domain::FundraisingEvents::CreateRequest' do
+      it 'is a renamed copy of Domain::CreateFundraisingEvent::Request' do
+        expect(Domain::FundraisingEvents::CreateRequest.ancestors)
+          .to include(Domain::CreateFundraisingEvent::Request)
+      end
+    end
+
+    describe 'Domain::FundraisingEvents::CreateResponse' do
+      it 'is a renamed copy of Domain::CreateFundraisingEvent::Response' do
+        expect(Domain::FundraisingEvents::CreateResponse.ancestors)
+          .to include(Domain::CreateFundraisingEvent::Response)
+      end
+    end
+  end
+
   context 'when creating a new fundraising event' do
-    # describe Domain::FundraisingEvents::CreateRequest do
-    #   it ''
-    # end
-
     describe '::create' do
-      let(:use_case) { instance_double(Domain::CreateFundraisingEvent) }
-
       before do
         described_class.data_gateway = Memory::FundraisingEvent
-
-        allow(Domain::CreateFundraisingEvent).to receive(:new)
-          .and_return(use_case)
       end
 
       it 'gives access to the CreateFundraisingEvent use case' do
-        allow(use_case).to receive(:call)
+        request = Domain::FundraisingEvents::CreateRequest.new(name: 'name')
 
-        described_class.create(name: 'name')
+        response = described_class.create(request)
 
-        expect(Domain::CreateFundraisingEvent).to have_received(:new).with(gateway: Memory::FundraisingEvent)
-        expect(use_case).to have_received(:call).with(anything)
-      end
-
-      it 'returns a Domain::FundraisingEvents::CreateResponse for namespace convenience' do
-        allow(use_case).to receive(:call)
-          .and_return(Domain::CreateFundraisingEvent::Response.new({ name: 'name' }))
-
-        expect(described_class.create(name: 'name')).to be_a(Domain::FundraisingEvents::CreateResponse)
+        expect(response).to be_a(Domain::FundraisingEvents::CreateResponse)
       end
     end
   end
