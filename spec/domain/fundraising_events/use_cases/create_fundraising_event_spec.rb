@@ -85,11 +85,16 @@ RSpec.describe Domain::CreateFundraisingEvent do
       end
     end
 
-    context 'when not successful' do
+    context 'with invalid data' do
       let(:invalid_request) { Domain::CreateFundraisingEvent::Request.new(name: '') }
 
-      it 'raises an error' do
-        expect { use_case.call(invalid_request) }.to raise_error(Domain::ValidationError, /name.*blank/)
+      it 'raises a Domain::ValidationError' do
+        expect { use_case.call(invalid_request)}.to raise_error do |error|
+          expect(error).to be_a(Domain::ValidationError)
+          expect(error.message).to match(/invalid/)
+          expect(error.errors[:fundraising_event]).not_to be_empty
+          expect(error.errors[:fundraising_event]).to eq({ name: :blank })
+        end
       end
     end
   end

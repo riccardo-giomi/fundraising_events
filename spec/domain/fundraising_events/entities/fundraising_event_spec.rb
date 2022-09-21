@@ -15,19 +15,27 @@ RSpec.describe Domain::FundraisingEvent do
     it 'checks that an id is not present' do
       entity = described_class.new(id: 1, name: 'Blood for the blood god')
 
-      expect { entity.create }.to raise_error(Domain::ValidationError, /id/)
+      expect { entity.create }.to raise_error do |error|
+        expect(error).to be_a(Domain::ValidationError)
+        expect(error.message).to match(/invalid/)
+        expect(error.errors).to eq({ id: :not_nil })
+      end
     end
 
     it "checks that there's a name" do
-      entity = described_class.new(name: nil)
+      entity = described_class.new(name: '')
 
-      expect { entity.create }.to raise_error(Domain::ValidationError, /blank/)
+      expect { entity.create }.to raise_error do |error|
+        expect(error).to be_a(Domain::ValidationError)
+        expect(error.message).to match(/invalid/)
+        expect(error.errors).to eq({ name: :blank })
+      end
     end
 
     it 'is not fooled if the name contains spaces' do
       entity = described_class.new(name: '   ')
 
-      expect { entity.create }.to raise_error(Domain::ValidationError, /blank/)
+      expect { entity.create }.to raise_error(Domain::ValidationError, /invalid/)
     end
 
     describe 'return data' do

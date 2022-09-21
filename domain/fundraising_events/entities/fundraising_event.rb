@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Domain
-  class ValidationError < StandardError; end
+require_relative '../../_errors/validation_error'
 
+module Domain
   class FundraisingEvent
     def initialize(id: nil, name:)
       @id   = id
@@ -22,8 +22,11 @@ module Domain
     end
 
     def validate_for_creation
-      raise(ValidationError, 'id: this entity already has an id') if @id
-      raise(ValidationError, 'name: blank') if @name.to_s.empty?
+      errors = {}
+      errors[:id]   = :not_nil if @id
+      errors[:name] = :blank   if @name.to_s.empty?
+
+      raise ValidationError.new('invalid fundraising event', errors:) unless errors.empty?
     end
   end
 end

@@ -27,7 +27,7 @@ module Domain
 
       Response.new(**gateway_response)
     rescue Domain::ValidationError => e
-      raise e
+      raise Domain::ValidationError.new(e.message, errors: { fundraising_event: e.errors })
     end
 
     private
